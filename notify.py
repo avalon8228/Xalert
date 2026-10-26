@@ -9,7 +9,7 @@
 
 วิธีทดสอบ:  python notify.py --date 2026-10-28 --dry-run
 """
-import argparse, json, os, sys, urllib.request
+import argparse, json, os, sys, urllib.error, urllib.parse, urllib.request
 from collections import OrderedDict
 from datetime import date, datetime, timedelta, timezone
 
@@ -39,11 +39,19 @@ def build_message(target, events, delay):
 
 
 def post_json(url, payload, headers=None):
+    # Discord บล็อก User-Agent เริ่มต้นของ Python (ขึ้น 403) จึงต้องตั้งเอง
     req = urllib.request.Request(
         url, data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json", **(headers or {})}, method="POST")
-    with urllib.request.urlopen(req, timeout=20) as r:
-        return r.status
+        headers={"Content-Type": "application/json", "User-Agent": "set-xalert/1.0", **(headers or {})},
+        method="POST")
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            return r.status
+    except urllib.error.HTTPError as e:
+        host = urllib.parse.urlparse(url).netloc
+        sys.exit(f"ส่งไม่สำเร็จ: {host} ตอบ HTTP {e.code} {e.read().decode('utf-8', 'ignore')[:300]}")
+    except urllib.error.URLError as e:
+        sys.exit(f"ส่งไม่สำเร็จ: เชื่อมต่อไม่ได้ ({e.reason})")
 
 
 def chunks(text, size):
