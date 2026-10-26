@@ -1,7 +1,7 @@
 name: SET X alert
 on:
   schedule:
-    - cron: "0 1 * * *"   # 08:00 เวลาไทย (UTC+7) ทุกวัน
+    - cron: "0 10 * * *"   # 17:00 เวลาไทย (UTC+7) ทุกวัน
   workflow_dispatch:
     inputs:
       date:
