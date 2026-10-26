@@ -1,0 +1,437 @@
+[
+{
+"date": "2026-10-01",
+"symbol": "JEPI19",
+"mark": "XD"
+},
+{
+"date": "2026-10-01",
+"symbol": "PWR03",
+"mark": "XD"
+},
+{
+"date": "2026-10-01",
+"symbol": "PWR80",
+"mark": "XD"
+},
+{
+"date": "2026-10-01",
+"symbol": "SPBOND80",
+"mark": "XD"
+},
+{
+"date": "2026-10-01",
+"symbol": "TFMAMA",
+"mark": "XD"
+},
+{
+"date": "2026-10-01",
+"symbol": "TAKUNI",
+"mark": "XM"
+},
+{
+"date": "2026-10-02",
+"symbol": "BSET100",
+"mark": "XD"
+},
+{
+"date": "2026-10-02",
+"symbol": "CSCO06",
+"mark": "XD"
+},
+{
+"date": "2026-10-02",
+"symbol": "JAPAN13",
+"mark": "XD"
+},
+{
+"date": "2026-10-02",
+"symbol": "NDX01",
+"mark": "XD"
+},
+{
+"date": "2026-10-02",
+"symbol": "ROH",
+"mark": "XR"
+},
+{
+"date": "2026-10-05",
+"symbol": "ALLY",
+"mark": "XD"
+},
+{
+"date": "2026-10-05",
+"symbol": "MIXUE80",
+"mark": "XD"
+},
+{
+"date": "2026-10-05",
+"symbol": "GRAND",
+"mark": "XM"
+},
+{
+"date": "2026-10-05",
+"symbol": "SSPF",
+"mark": "XM"
+},
+{
+"date": "2026-10-06",
+"symbol": "BBGI",
+"mark": "XD"
+},
+{
+"date": "2026-10-06",
+"symbol": "DOLLARG80",
+"mark": "XD"
+},
+{
+"date": "2026-10-06",
+"symbol": "JPMUS06",
+"mark": "XD"
+},
+{
+"date": "2026-10-06",
+"symbol": "JPMUS19",
+"mark": "XD"
+},
+{
+"date": "2026-10-06",
+"symbol": "SAWAD",
+"mark": "XD"
+},
+{
+"date": "2026-10-07",
+"symbol": "MWG11",
+"mark": "XD"
+},
+{
+"date": "2026-10-07",
+"symbol": "MWG19",
+"mark": "XD"
+},
+{
+"date": "2026-10-07",
+"symbol": "PTT",
+"mark": "XD"
+},
+{
+"date": "2026-10-07",
+"symbol": "THANI",
+"mark": "XD"
+},
+{
+"date": "2026-10-07",
+"symbol": "STPI",
+"mark": "XR"
+},
+{
+"date": "2026-10-08",
+"symbol": "HKCE01",
+"mark": "XD"
+},
+{
+"date": "2026-10-08",
+"symbol": "AIMIRT",
+"mark": "XM"
+},
+{
+"date": "2026-10-08",
+"symbol": "GRAND",
+"mark": "XM"
+},
+{
+"date": "2026-10-09",
+"symbol": "AXP06",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "ICBC06",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "ICBC19",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "MA80",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "MRVL06",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "MRVL23",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "MRVL80",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "ORCL01",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "ORCL06",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "ORCL19",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "ORCL23",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "ORCL80",
+"mark": "XD"
+},
+{
+"date": "2026-10-09",
+"symbol": "TNH",
+"mark": "XM"
+},
+{
+"date": "2026-10-09",
+"symbol": "TNL",
+"mark": "XM"
+},
+{
+"date": "2026-10-12",
+"symbol": "ZJINNO80",
+"mark": "XD"
+},
+{
+"date": "2026-10-12",
+"symbol": "CITY",
+"mark": "XM"
+},
+{
+"date": "2026-10-12",
+"symbol": "COM7",
+"mark": "XM"
+},
+{
+"date": "2026-10-12",
+"symbol": "FORTH",
+"mark": "XM"
+},
+{
+"date": "2026-10-14",
+"symbol": "DEYE80",
+"mark": "XD"
+},
+{
+"date": "2026-10-14",
+"symbol": "LH",
+"mark": "XD"
+},
+{
+"date": "2026-10-14",
+"symbol": "MICRON01",
+"mark": "XD"
+},
+{
+"date": "2026-10-14",
+"symbol": "MICRON03",
+"mark": "XD"
+},
+{
+"date": "2026-10-14",
+"symbol": "MICRON19",
+"mark": "XD"
+},
+{
+"date": "2026-10-14",
+"symbol": "MICRON23",
+"mark": "XD"
+},
+{
+"date": "2026-10-14",
+"symbol": "MICRON80",
+"mark": "XD"
+},
+{
+"date": "2026-10-14",
+"symbol": "INGRS",
+"mark": "XM"
+},
+{
+"date": "2026-10-14",
+"symbol": "WELL",
+"mark": "XM"
+},
+{
+"date": "2026-10-15",
+"symbol": "ABBV19",
+"mark": "XD"
+},
+{
+"date": "2026-10-15",
+"symbol": "ABBV80",
+"mark": "XD"
+},
+{
+"date": "2026-10-15",
+"symbol": "FCX23",
+"mark": "XD"
+},
+{
+"date": "2026-10-15",
+"symbol": "MVP",
+"mark": "XM"
+},
+{
+"date": "2026-10-19",
+"symbol": "TAIWANAI13",
+"mark": "XD"
+},
+{
+"date": "2026-10-19",
+"symbol": "NFC",
+"mark": "XM"
+},
+{
+"date": "2026-10-20",
+"symbol": "DELL19",
+"mark": "XD"
+},
+{
+"date": "2026-10-20",
+"symbol": "DELL23",
+"mark": "XD"
+},
+{
+"date": "2026-10-20",
+"symbol": "DELL80",
+"mark": "XD"
+},
+{
+"date": "2026-10-21",
+"symbol": "AEONTS",
+"mark": "XD"
+},
+{
+"date": "2026-10-21",
+"symbol": "META",
+"mark": "XM"
+},
+{
+"date": "2026-10-22",
+"symbol": "JPSEMI24",
+"mark": "XD"
+},
+{
+"date": "2026-10-22",
+"symbol": "CPNREIT",
+"mark": "XM"
+},
+{
+"date": "2026-10-26",
+"symbol": "ASML01",
+"mark": "XD"
+},
+{
+"date": "2026-10-26",
+"symbol": "CAT19",
+"mark": "XD"
+},
+{
+"date": "2026-10-26",
+"symbol": "CAT80",
+"mark": "XD"
+},
+{
+"date": "2026-10-26",
+"symbol": "PNG80",
+"mark": "XD"
+},
+{
+"date": "2026-10-27",
+"symbol": "GEV23",
+"mark": "XD"
+},
+{
+"date": "2026-10-27",
+"symbol": "GEV80",
+"mark": "XD"
+},
+{
+"date": "2026-10-27",
+"symbol": "INETREIT",
+"mark": "XD"
+},
+{
+"date": "2026-10-29",
+"symbol": "KIAT",
+"mark": "XM"
+},
+{
+"date": "2026-10-29",
+"symbol": "SPTX",
+"mark": "XM"
+},
+{
+"date": "2026-10-30",
+"symbol": "COSTCO19",
+"mark": "XD"
+},
+{
+"date": "2026-10-30",
+"symbol": "COSTCO80",
+"mark": "XD"
+},
+{
+"date": "2026-10-30",
+"symbol": "HK01",
+"mark": "XD"
+},
+{
+"date": "2026-10-30",
+"symbol": "HK13",
+"mark": "XD"
+},
+{
+"date": "2026-10-30",
+"symbol": "MS06",
+"mark": "XD"
+},
+{
+"date": "2026-10-30",
+"symbol": "SGX19",
+"mark": "XD"
+},
+{
+"date": "2026-10-30",
+"symbol": "TXN03",
+"mark": "XD"
+},
+{
+"date": "2026-10-30",
+"symbol": "NVD",
+"mark": "XM"
+},
+{
+"date": "2026-10-30",
+"symbol": "TL",
+"mark": "XM"
+},
+{
+"date": "2026-10-30",
+"symbol": "TL",
+"mark": "XR"
+}
+]
