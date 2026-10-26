@@ -8,30 +8,12 @@ on:
         description: "ทดสอบแจ้งเตือนด้วยวันที่ YYYY-MM-DD (เว้นว่าง = วันนี้)"
         required: false
 permissions:
-  contents: write
+  contents: read
 jobs:
   notify:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-
-      - name: Update events from Settrade/SET
-        continue-on-error: true
-        env:
-          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          EVENT_NAME: ${{ github.event_name }}
-        run: python3 update_events.py
-
-      - name: Commit updated events.json
-        run: |
-          if [ -n "$(git status --porcelain events.json)" ]; then
-            git config user.name "github-actions[bot]"
-            git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add events.json
-            git commit -m "Update events"
-            git push
-          fi
-
       - name: Send alerts
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
