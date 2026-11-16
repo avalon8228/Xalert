@@ -6,6 +6,8 @@
   DISCORD_WEBHOOK_URL   Discord webhook
   LINE_CHANNEL_TOKEN    LINE Messaging API channel access token
   LINE_USER_ID          userId (หรือ groupId) ที่จะให้ส่งไปหา
+  SUPABASE_URL          URL โปรเจกต์ Supabase ของเว็บทีม (ถ้าตั้ง จะอ่านข้อมูลจากตาราง calendar_events)
+  SUPABASE_ANON_KEY     anon/publishable key ตัวเดียวกับที่เว็บทีมใช้ (ถ้าอ่านไม่ได้ จะสำรองด้วย events.json)
 
 วิธีทดสอบ:  python notify.py --date 2026-10-28 --dry-run
 """
@@ -27,7 +29,9 @@ def build_message(target, events, delay):
     for e in events:
         x_date = date.fromisoformat(e["date"])
         if x_date + timedelta(days=delay) == target:
-            hits.setdefault(x_date, OrderedDict()).setdefault(e["symbol"], []).append(e["mark"])
+            marks = hits.setdefault(x_date, OrderedDict()).setdefault(e["symbol"], [])
+            if e["mark"] not in marks:
+                marks.append(e["mark"])
     if not hits:
         return None
     lines = [f"🔔 ครบ {delay} วันหลังขึ้นเครื่องหมาย X — {thai(target)}"]
@@ -36,6 +40,29 @@ def build_message(target, events, delay):
         for sym, marks in syms.items():
             lines.append(f"• {sym} ({', '.join(marks)})")
     return "\n".join(lines)
+
+
+def load_events_supabase(target, delay):
+    """อ่านเฉพาะแถวที่วันขึ้นเครื่องหมาย = target - delay จากตาราง calendar_events (ตัดแถว MEET ที่ไม่ใช่เครื่องหมาย X)"""
+    base = os.environ["SUPABASE_URL"].rstrip("/")
+    key = os.environ["SUPABASE_ANON_KEY"].strip()
+    x_date = (target - timedelta(days=delay)).isoformat()
+    url = f"{base}/rest/v1/calendar_events?select=event_date,symbol,mark&event_date=eq.{x_date}&limit=1000"
+    headers = {"apikey": key, "User-Agent": "set-xalert/1.0"}
+    if key.startswith("eyJ"):  # key แบบ JWT (anon เดิม) ต้องส่ง Authorization ด้วย; key แบบ sb_publishable_ ส่งแค่ apikey
+        headers["Authorization"] = f"Bearer {key}"
+    req = urllib.request.Request(url, headers=headers)
+    try:
+        with urllib.request.urlopen(req, timeout=20) as r:
+            rows = json.loads(r.read().decode("utf-8"))
+    except urllib.error.HTTPError as e:
+        raise RuntimeError(f"HTTP {e.code}")
+    except urllib.error.URLError as e:
+        raise RuntimeError(f"เชื่อมต่อไม่ได้: {e.reason}")
+    if not isinstance(rows, list):
+        raise RuntimeError("ข้อมูลที่ได้ไม่ใช่รายการ")
+    return [{"date": r["event_date"], "symbol": r["symbol"], "mark": r["mark"]}
+            for r in rows if str(r.get("mark", "")).upper().startswith("X")]
 
 
 def post_json(url, payload, headers=None):
@@ -87,10 +114,20 @@ def main():
     a = ap.parse_args()
 
     today = date.fromisoformat(a.date) if a.date else datetime.now(timezone(timedelta(hours=7))).date()
-    with open(a.events, encoding="utf-8") as f:
-        events = json.load(f)
+
+    events, warn = None, None
+    if os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_ANON_KEY"):
+        try:
+            events = load_events_supabase(today, a.delay)
+        except Exception as e:  # noqa: BLE001
+            warn = f"⚠️ อ่านข้อมูลจาก Supabase ไม่ได้ ({e}) ใช้ events.json แทน อาจไม่ครบ"
+    if events is None:
+        with open(a.events, encoding="utf-8") as f:
+            events = json.load(f)
 
     msg = build_message(today, events, a.delay)
+    if warn:
+        msg = warn + ("\n\n" + msg if msg else "")
     if not msg:
         print(f"{today}: ไม่มีหุ้นที่ครบ {a.delay} วัน")
         return

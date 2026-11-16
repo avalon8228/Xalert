@@ -1,0 +1,25 @@
+name: SET X alert
+on:
+  schedule:
+    - cron: "0 10 * * *"   # 17:00 เวลาไทย (UTC+7) ทุกวัน
+  workflow_dispatch:
+    inputs:
+      date:
+        description: "ทดสอบแจ้งเตือนด้วยวันที่ YYYY-MM-DD (เว้นว่าง = วันนี้)"
+        required: false
+permissions:
+  contents: read
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Send alerts
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+          LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
+          LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
+          DATE_INPUT: ${{ github.event.inputs.date }}
+        run: python3 notify.py ${DATE_INPUT:+--date $DATE_INPUT}
