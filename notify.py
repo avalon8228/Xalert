@@ -11,7 +11,7 @@
 
 วิธีทดสอบ:  python notify.py --date 2026-10-28 --dry-run
 """
-import argparse, json, os, sys, urllib.error, urllib.parse, urllib.request
+import argparse, html, json, os, re, sys, urllib.error, urllib.parse, urllib.request
 from collections import OrderedDict
 from datetime import date, datetime, timedelta, timezone
 
@@ -40,6 +40,35 @@ def build_message(target, events, delay):
         for sym, marks in syms.items():
             lines.append(f"• {sym} ({', '.join(marks)})")
     return "\n".join(lines)
+
+
+PAGE_URL = "https://avalon8228.github.io/data/calendar-list.html"
+
+
+def load_events_page(url):
+    """อ่านเครื่องหมาย X จากหน้า calendar-list.html (HTML ธรรมดา) ของเว็บทีม"""
+    req = urllib.request.Request(url, headers={"User-Agent": "set-xalert/1.0"})
+    try:
+        with urllib.request.urlopen(req, timeout=30) as r:
+            page = r.read().decode("utf-8")
+    except urllib.error.HTTPError as e:
+        raise RuntimeError(f"HTTP {e.code}")
+    except urllib.error.URLError as e:
+        raise RuntimeError(f"เชื่อมต่อไม่ได้: {e.reason}")
+    days = re.findall(r"<h3>(\d{1,2}) (\S+) (\d{4}) \([^)]*\)</h3>\s*<ul>(.*?)</ul>", page, re.S)
+    if not days:
+        raise RuntimeError("ไม่พบรายการวันที่ในหน้า")
+    events = []
+    for d, mon, yr, body in days:
+        if mon not in TH_MONTHS:
+            continue
+        iso = f"{int(yr) - 543:04d}-{TH_MONTHS.index(mon) + 1:02d}-{int(d):02d}"
+        for mark, syms in re.findall(r"<li><b>(X[A-Z]+)</b>.*?:\s*([^<]*)</li>", body):
+            for sym in syms.split(","):
+                sym = html.unescape(sym).strip()
+                if sym:
+                    events.append({"date": iso, "symbol": sym, "mark": mark})
+    return events
 
 
 def load_events_supabase(target, delay):
@@ -115,19 +144,25 @@ def main():
 
     today = date.fromisoformat(a.date) if a.date else datetime.now(timezone(timedelta(hours=7))).date()
 
-    events, warn, source = None, None, None
-    x_date = (today - timedelta(days=a.delay)).isoformat()
-    if os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_ANON_KEY"):
+    events, warns, source = None, [], None
+    try:
+        events = load_events_page(os.getenv("CALENDAR_PAGE_URL", PAGE_URL))
+        source = f"หน้า calendar-list (อ่านได้ {len(events)} รายการ)"
+    except Exception as e:  # noqa: BLE001
+        warns.append(f"⚠️ อ่านหน้า calendar-list ไม่ได้ ({e})")
+    if events is None and os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_ANON_KEY"):
         try:
             events = load_events_supabase(today, a.delay)
-            source = f"Supabase (พบ {len(events)} รายการที่ขึ้นเครื่องหมายวันที่ {x_date})"
+            source = f"Supabase (พบ {len(events)} รายการที่ขึ้นเครื่องหมายวันที่ {(today - timedelta(days=a.delay)).isoformat()})"
+            warns.append("ใช้ Supabase แทน")
         except Exception as e:  # noqa: BLE001
-            warn = f"⚠️ อ่านข้อมูลจาก Supabase ไม่ได้ ({e}) ใช้ events.json แทน อาจไม่ครบ"
+            warns.append(f"⚠️ อ่านข้อมูลจาก Supabase ไม่ได้ ({e})")
     if events is None:
         with open(a.events, encoding="utf-8") as f:
             events = json.load(f)
-        missing = [n for n in ("SUPABASE_URL", "SUPABASE_ANON_KEY") if not os.getenv(n)]
-        source = "events.json" + (f" (ไม่พบ secret: {', '.join(missing)})" if missing else " (สำรอง)")
+        source = "events.json (สำรอง อาจไม่ครบ)"
+        warns.append("ใช้ events.json แทน อาจไม่ครบ")
+    warn = "\n".join(warns) or None
     print(f"แหล่งข้อมูล: {source}")
 
     # ถ้ากด Run workflow เอง ให้ตอบกลับเสมอ เพื่อให้รู้ว่าระบบทำงานและอ่านข้อมูลจากไหน (รอบตั้งเวลายังเงียบตามเดิม)
