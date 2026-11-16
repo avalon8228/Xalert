@@ -22,4 +22,5 @@ jobs:
           LINE_CHANNEL_TOKEN: ${{ secrets.LINE_CHANNEL_TOKEN }}
           LINE_USER_ID: ${{ secrets.LINE_USER_ID }}
           DATE_INPUT: ${{ github.event.inputs.date }}
+          EVENT_NAME: ${{ github.event_name }}
         run: python3 notify.py ${DATE_INPUT:+--date $DATE_INPUT}

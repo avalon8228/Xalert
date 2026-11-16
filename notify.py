@@ -115,17 +115,26 @@ def main():
 
     today = date.fromisoformat(a.date) if a.date else datetime.now(timezone(timedelta(hours=7))).date()
 
-    events, warn = None, None
+    events, warn, source = None, None, None
+    x_date = (today - timedelta(days=a.delay)).isoformat()
     if os.getenv("SUPABASE_URL") and os.getenv("SUPABASE_ANON_KEY"):
         try:
             events = load_events_supabase(today, a.delay)
+            source = f"Supabase (พบ {len(events)} รายการที่ขึ้นเครื่องหมายวันที่ {x_date})"
         except Exception as e:  # noqa: BLE001
             warn = f"⚠️ อ่านข้อมูลจาก Supabase ไม่ได้ ({e}) ใช้ events.json แทน อาจไม่ครบ"
     if events is None:
         with open(a.events, encoding="utf-8") as f:
             events = json.load(f)
+        missing = [n for n in ("SUPABASE_URL", "SUPABASE_ANON_KEY") if not os.getenv(n)]
+        source = "events.json" + (f" (ไม่พบ secret: {', '.join(missing)})" if missing else " (สำรอง)")
+    print(f"แหล่งข้อมูล: {source}")
 
+    # ถ้ากด Run workflow เอง ให้ตอบกลับเสมอ เพื่อให้รู้ว่าระบบทำงานและอ่านข้อมูลจากไหน (รอบตั้งเวลายังเงียบตามเดิม)
+    is_test = os.getenv("EVENT_NAME") == "workflow_dispatch"
     msg = build_message(today, events, a.delay)
+    if is_test:
+        msg = (msg or f"ℹ️ ทดสอบวันที่ {thai(today)}: ไม่มีหุ้นที่ครบ {a.delay} วัน") + f"\n\n(แหล่งข้อมูล: {source})"
     if warn:
         msg = warn + ("\n\n" + msg if msg else "")
     if not msg:
